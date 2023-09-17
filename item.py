@@ -1,5 +1,9 @@
 import csv
 from enum import Enum
+from datetime import timedelta, datetime
+# from dateutil import tz
+
+# from item_factory import create_reminder
 
 
 class Item:
@@ -11,21 +15,22 @@ class Item:
         MEETING = 4
 
     # list to hold all items
-    todo_list = []
+    todo_list: list = []
 
-    pay_rate = 0.8 # The pay rate after 20% discount
+    modified: bool = False
 
-    def __init__(self, name: str, description: str, comment: str, quantity=0):
+    def __init__(self, name: str, description: str, comment: str):
         # run validations to the received arguments
         assert len(description) < 100, f"Description '{description}' is to long!"
-        assert Item.is_integer(quantity), f"Quantity {quantity} is not an integer!!!"
-        assert quantity >= 0, f"Quantity {quantity} is not greater or equal to zero!"
+        # assert Item.is_integer(quantity), f"Quantity {quantity} is not an integer!!!"
 
         # assign to self object
-        self.__name = name
-        self.__description = description
-        self.comment = comment
-        self.quantity = quantity
+        self.__name: str = name
+        self.__description: str = description
+        self.comment: str = comment
+        # self.create_date: datetime = datetime.now(tz=tz.tzlocal())
+        self.create_date: datetime = datetime.now()
+        self.expiry_date: datetime = None
 
         # actions to execute
         Item.todo_list.append(self)
@@ -34,12 +39,12 @@ class Item:
     def description(self):
         return self.__description
 
-    def apply_discount(self):
-        # self.__price = self.__price * self.pay_rate
+    def comment_update(self, s: str):
+        self.comment = self.comment + ', ' + s
         pass
 
-    def apply_increment(self, increment_value):
-        # self.__price = self.__price + self.__price * increment_value
+    def comment_replace(self, s: str):
+        self.comment = s
         pass
 
     # getter
@@ -59,15 +64,15 @@ class Item:
 
     def item_to_csv_row(self):
         csv_row = []
+        csv_row.append(self.get_type())
         csv_row.append(self.name)
         csv_row.append(self.description)
         csv_row.append(self.comment)
-        csv_row.append(self.quantity)
         return csv_row
 
 
     def get_type(self):
-        return Item.ItemType_E.TASK.value
+        return Item.ItemType_E.TODO.value
     
 
     def calculate_total_price(self):
@@ -82,28 +87,28 @@ class Item:
             items = list(csvreader)
 
         for item in items:
-            print(item)
-            Item(
-                name=item.get('Name'),
-                description=item.get('Description'),
-                comment=item.get('Comment'),
-                quantity=int(item.get('quantity')),
-            )
+            print('item:', item)
+            if int(item.get('Type')) == 1:
+                Item(
+                    name=item.get('Name'),
+                    description=item.get('Description'),
+                    comment=item.get('Comment'),
+                )
+            elif int(item.get('Type')) == 2:
+                # create_reminder(
+                Item(
+                    name=item.get('Name'),
+                    description=item.get('Description'),
+                    comment=item.get('Comment'),
+                )
 
     @classmethod
     def write_to_csv(cls):
 
         # field names
-        fields = ['Name', 'Description', 'Comment', 'quantity']
+        fields = ['Type', 'Name', 'Description', 'Comment']
 
         # data rows of csv file
-        rows2 = [ ['Nikhil', 'COE', '2', '9.0'],
-                ['Sanchit', 'COE', '2', '9.1'],
-                ['Aditya', 'IT', '2', '9.3'],
-                ['Sagar', 'SE', '1', '9.5'],
-                ['Prateek', 'MCE', '3', '7.8'],
-                ['Sahil', 'EP', '2', '9.1']]
-            
         rows = []
 
         for item in Item.todo_list:
@@ -141,5 +146,5 @@ class Item:
             return False
 
     def __repr__(self):
-        return f"{self.__class__.__name__}('{self.name}', '{self.__description}', '{self.comment}', {self.quantity})"
+        return f"{self.__class__.__name__}('type:', '{self.get_type()}', 'name:', '{self.name}', 'description:', '{self.__description}', 'comment:', '{self.comment}', 'created:', '{self.create_date}', 'expiry:', '{self.expiry_date}', )"
 

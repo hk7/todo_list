@@ -2,10 +2,9 @@ from item import Item
 
 
 class Reminder(Item):
-    pay_rate = 0.5
-    def __init__(self, name: str, description: str, comment: str, quantity=0, broken_phones=0):
+    def __init__(self, name: str, description: str, comment: str, broken_phones=0):
         # Call to super function to have access to all attributes / methods
-        super().__init__(name, description, comment, quantity)
+        super().__init__(name, description, comment)
 
         # Run validations to the received arguments
         assert broken_phones >= 0, f"Broken Phones {broken_phones} is not greater or equal to zero!"
@@ -16,3 +15,4 @@ class Reminder(Item):
 
     def get_type(self):
         return Item.ItemType_E.REMINDER.value
+
