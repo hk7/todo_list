@@ -3,7 +3,13 @@ from enum import Enum
 from datetime import timedelta, datetime
 # from dateutil import tz
 
+# from reminder import Reminder
+# Can't imprt Reminder here due to the following error:
+# ImportError: cannot import name 'Item' from partially initialized module 'item' (most likely due to a circular import) (d:\Users\haimk-2\Software2\Python\Python-Examples\MiscHK\MyGitProjects\todo_list\item.py)
+
 # from item_factory import create_reminder
+
+# move the read_from_csv function to nutral file!!!
 
 
 class Item:
@@ -81,7 +87,7 @@ class Item:
 
 
     @classmethod
-    def read_from_csv(cls):
+    def qqq_read_from_csv(cls):
         with open('items.csv', 'r') as f:
             csvreader = csv.DictReader(f)
             items = list(csvreader)
@@ -96,7 +102,8 @@ class Item:
                 )
             elif int(item.get('Type')) == 2:
                 # create_reminder(
-                Item(
+                # Item(
+                Reminder(
                     name=item.get('Name'),
                     description=item.get('Description'),
                     comment=item.get('Comment'),
