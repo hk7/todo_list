@@ -15,6 +15,7 @@ def main():
     print('hk0:', Item.todo_list)
 
 
+    '''
     item1 = Item("car", "10000 $", "qwerty...")
     print(item1.description)
     print(item1.comment)
@@ -30,6 +31,7 @@ def main():
     print(item3.comment)
     print(item3.get_type())
     print(item3.deadline)
+    '''
 
 
     print('hk1:', Item.todo_list)

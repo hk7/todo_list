@@ -1,3 +1,4 @@
+import os
 import csv
 from enum import Enum
 from datetime import timedelta, datetime
@@ -74,6 +75,7 @@ class Item:
         csv_row.append(self.name)
         csv_row.append(self.description)
         csv_row.append(self.comment)
+        csv_row.append(self.create_date.strftime('%Y-%m-%d %H:%M:%S'))
         return csv_row
 
 
@@ -112,8 +114,13 @@ class Item:
     @classmethod
     def write_to_csv(cls):
 
+        # save current file as backup
+        # note: rename gets error on windows, hence use replace
+        # os.rename('items.csv', 'items_backup.csv')
+        os.replace('items.csv', 'items_backup.csv')
+
         # field names
-        fields = ['Type', 'Name', 'Description', 'Comment']
+        fields = ['Type', 'Name', 'Description', 'Comment', 'Created']
 
         # data rows of csv file
         rows = []
@@ -126,7 +133,7 @@ class Item:
         print('rows:', rows)
 
         # name of csv file
-        filename = "items_2.csv"
+        filename = "items.csv"
             
         # writing to csv file
         # with open(filename, 'w') as csvfile:
